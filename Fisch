@@ -1,0 +1,509 @@
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+local Window = OrionLib:MakeWindow({Name = "Makis Hub", HidePremium = false, SaveConfig = true, ConfigFolder = "OrionTest"})
+
+
+local players = game:GetService("Players")
+local vim = game:GetService("VirtualInputManager")
+local run_service = game:GetService("RunService")
+local replicated_storage = game:GetService("ReplicatedStorage")
+local localplayer = players.LocalPlayer
+local playergui = localplayer.PlayerGui
+local character = game.Players.LocalPlayer.Character
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+
+
+-- // _G.ssss \\ --
+
+_G.AutoFisch = false
+_G.AutoReel = false
+_G.AutoShake = false
+_G.AutoThrow = false
+_G.ShakeSpeed = 0.5
+_G.FreezePlayer = false
+_G.HumPos = "1"
+_G.PlrName = "nil"
+_G.ItemGift = 2
+_G.selectedisland = "Moosewood"
+
+
+-- // functions \\ --
+
+local utility = {blacklisted_attachments = {"bob", "bodyweld"}}; do
+    function utility.simulate_click(x, y, mb)
+        vim:SendMouseButtonEvent(x, y, (mb - 1), true, game, 1);
+        vim:SendMouseButtonEvent(x, y, (mb - 1), false, game, 1);
+end
+
+function catch()
+
+    local args = {
+        [1] = 100,
+        [2] = true
+    }
+
+    game:GetService("ReplicatedStorage"):WaitForChild("events"):WaitForChild("reelfinished"):FireServer(unpack(args))
+end
+
+function shake()
+        local shake_ui = playergui:FindFirstChild("shakeui");
+
+        if (shake_ui == nil) then
+            return;
+        end
+        
+        local safezone, button = shake_ui:FindFirstChild("safezone"), nil;
+
+        if (safezone) then
+            button = safezone:FindFirstChild("button")
+        end
+
+        if (button == nil) then
+            return;
+        end
+
+        utility.simulate_click(button.AbsolutePosition.X + (button.AbsoluteSize.X / 2), button.AbsolutePosition.Y + (button.AbsoluteSize.Y / 2), 1);
+    end
+end
+
+function throw()
+
+    local args = {
+        [1] = 100,
+        [2] = 1
+    }
+
+    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Flimsy Rod").events.cast:FireServer(unpack(args))
+
+
+end
+
+function freeze()
+    while _G.FreezePlayer == true do
+        _G.HumPos = humanoidRootPart.CFrame
+        wait(0.01)
+        humanoidRootPart.CFrame = _G.HumPos
+    end
+end
+
+function autofisch()
+    while _G.AutoFisch == true do
+
+        _G.HumPos = humanoidRootPart.CFrame
+        
+        throw()
+        wait(_G.ShakeSpeed)
+        shake()
+        catch()
+
+        humanoidRootPart.CFrame = _G.HumPos
+
+    end
+end
+
+function autoreel()
+    while _G.AutoReel == true do
+        wait(0.0001)
+        catch()
+
+    end
+end
+
+function autoshake()
+    while _G.AutoShake == true do
+        wait(_G.ShakeSpeed)
+        shake()
+    end
+end
+
+function autothrow()
+    while _G.AutoThrow == true do
+        wait(0.0001)
+        throw()
+    end
+end
+
+function aprraise()
+
+    workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Appraiser"):WaitForChild("appraiser"):WaitForChild("appraise"):InvokeServer()
+
+end
+
+
+function autoaprraise()
+
+    
+
+    workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Appraiser"):WaitForChild("appraiser"):WaitForChild("appraise"):InvokeServer()
+
+end
+
+function sellall()
+ 
+    game:GetService("ReplicatedStorage"):WaitForChild("events"):WaitForChild("SellAll"):InvokeServer()
+
+end
+
+function gift()
+
+    for _, tool in pairs(game.character:FindFirstChild()) do
+        if tool:IsA("Tool") then
+            if tool then
+                
+              _G.ItemGift = tool.Name
+
+            end
+    
+        end
+    end
+
+    local args = {
+        [1] = game:GetService("Players"):WaitForChild(_G.PlrName)
+    }
+    
+    game:GetService("Players").LocalPlayer.Character._G.ItemGift.offer:FireServer(unpack(args))
+    
+    
+end
+
+function Tpchange()
+
+    if _G.selectedisland == "Moosewood" then
+
+        _G.TpIsland = CFrame.new(381, 134, 235)
+    
+    else if _G.selectedisland == "Roslit Bay" then
+    
+
+        _G.TpIsland = CFrame.new(-1476, 133, 671)
+    
+    else if _G.selectedisland == "Terrapin Island" then
+    
+
+        _G.TpIsland = CFrame.new(-142, 145, 1910)
+
+
+
+    else if _G.selectedisland == "Sunstone Island" then
+    
+
+        _G.TpIsland = CFrame.new(-932, 131, -1119)
+
+
+
+
+    else if _G.selectedisland == "Statue Of Sovereignty" then
+    
+
+        _G.TpIsland = CFrame.new(72, 141, -1028)
+
+
+
+    else if _G.selectedisland == "Mushgrove Swamp" then
+    
+
+        _G.TpIsland = CFrame.new(2501, 131, -720)
+
+
+
+    else if _G.selectedisland == "Snowcap Island" then
+    
+
+        _G.TpIsland = CFrame.new(2649, 142, 2521)
+
+
+
+    else if _G.selectedisland == "Vertigo" then
+    
+
+        _G.TpIsland = CFrame.new(-112, -515, 1040)
+
+
+
+    else if _G.selectedisland == "Arch" then
+    
+
+        _G.TpIsland = CFrame.new(998, 131, -1237)
+
+
+
+    else if _G.selectedisland == "Desolate Deep" then
+    
+
+        _G.TpIsland = CFrame.new(-1654, -213, -2845)
+
+
+
+    else if _G.selectedisland == "The Depths" then
+    
+
+        _G.TpIsland = CFrame.new(951, -711, 1243)
+
+
+    else if _G.selectedisland == "Northern Expedition" then
+    
+
+        _G.TpIsland = CFrame.new(19527, 132, 5294)
+
+
+
+    else if _G.selectedisland == "Ancient Isle" then
+    
+
+        _G.TpIsland = CFrame.new(6056, 195, 278)
+
+    end
+    end
+    end
+    end
+    end
+    end
+    end
+    end
+    end
+    end
+    end
+    end
+    end
+
+end
+
+function breathinfwater()
+
+    for _, ox in pairs(character.client:GetDescendants()) do
+        if ox.Name == "oxygen1" then
+            if ox then
+                
+              ox.Enabled = false
+                print("Oxygen disabled")
+
+            end
+    
+        end
+    end
+
+
+end
+
+function breathinfm()
+
+    for _, ox in pairs(character.client:GetDescendants()) do
+        if ox.Name == "oxygen(peaks)" then
+            if ox then
+                
+              ox.Disabled = true
+                print("Oxygen peak disabled")
+
+            end
+    
+        end
+    end
+
+end
+
+
+
+-- // Tabs \\ --
+
+local MiscTab = Window:MakeTab({
+	Name = "Misc Options",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+
+local FarmTab = Window:MakeTab({
+	Name = "Autofarm",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+
+local TpTab = Window:MakeTab({
+	Name = "Teleport Options",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+
+
+-- // Buttons and others \\ --
+
+--Buttons
+
+MiscTab:AddLabel("NOTICE !: APPRAISE ")
+MiscTab:AddButton({
+	Name = "Appraise Fisch",
+	Callback = function()
+      		aprraise()
+  	end    
+})
+
+
+
+
+MiscTab:AddLabel("NOTICE !: SELL ")
+MiscTab:AddButton({
+	Name = "Sell All Fisch",
+	Callback = function()
+
+      		sellall()
+
+  	end    
+})
+
+MiscTab:AddLabel("NOTICE !: GIFT ")
+MiscTab:AddButton({
+	Name = "Gift",
+	Callback = function()
+      		
+        gift()
+
+  	end    
+})
+MiscTab:AddLabel("NOTICE !: OXYGEN ")
+
+MiscTab:AddButton({
+	Name = "Disable Water Oxygen",
+	Callback = function()
+      		
+        breathinf()
+
+  	end    
+})
+MiscTab:AddButton({
+	Name = "Disable Mountain Oxygen",
+	Callback = function()
+      		
+        breathinfm()
+
+  	end    
+})
+
+
+
+
+TpTab:AddLabel("NOTICE !: TELEPORT TO ISLAND ")
+TpTab:AddButton({
+	Name = "Teleport to Island",
+	Callback = function()
+
+      	humanoidRootPart.CFrame = _G.TpIsland
+        print(_G.selectedisland)
+  	end    
+})
+
+
+
+
+
+--input
+MiscTab:AddTextbox({
+	Name = "Player Name",
+	Default = "Enter Players Name",
+	TextDisappear = true,
+	Callback = function(Value)
+
+		_G.PlrName = Value
+
+	end	  
+})
+
+
+
+--- Toggle
+FarmTab:AddLabel("NOTICE !: AUTOFARM ")
+FarmTab:AddToggle({
+	Name = "Auto Farm Fish",
+	Default = false,
+	Callback = function(Value)
+
+        _G.AutoFisch = Value
+        
+        autofisch()
+
+	end    
+})
+
+
+FarmTab:AddToggle({
+	Name = "Auto Reel",
+	Default = false,
+	Callback = function(Value)
+
+        _G.AutoReel = Value
+        autoreel()
+
+	end    
+})
+FarmTab:AddToggle({
+	Name = "Auto Shake",
+	Default = false,
+	Callback = function(Value)
+
+        _G.AutoShake = Value
+        autoshake()
+
+	end    
+})
+FarmTab:AddToggle({
+	Name = "Auto Throw",
+	Default = false,
+	Callback = function(Value)
+
+        _G.AutoThrow = Value
+        autothrow()
+
+	end    
+})
+
+FarmTab:AddToggle({
+	Name = "Freeze Player",
+	Default = false,
+	Callback = function(Value)
+
+        _G.FreezePlayer = Value
+        freeze()
+
+	end    
+})
+
+--Dropdown
+FarmTab:AddDropdown({
+	Name = "Shake Speed",
+	Default = "0.01",
+	Options = {"0.001", "0.01", "0.1", "0.5", "1", "2"},
+	Callback = function(Value)
+
+		_G.ShakeSpeed = Value
+
+	end    
+})
+
+MiscTab:AddDropdown({
+	Name = "Select Item",
+	Default = "1",
+	Options = {},
+	Callback = function(Value)
+
+		print(Value)
+
+	end    
+})
+
+
+TpTab:AddDropdown({
+	Name = "Select Island",
+	Default = "Moosewood",
+	Options = {"Moosewood", "Roslit Bay", "Terrapin Island", "Sunstone Island", "Statue Of Sovereignty", "Mushgrove Swamp", "Snowcap Island", "Vertigo", "Arch", "Desolate Deep", "The Depths", "Northern Expedition", "Ancient Isle"},
+	Callback = function(Value)
+
+		_G.selectedisland = Value
+        print(_G.selectedisland)
+        Tpchange()
+
+	end    
+})
+
+
+OrionLib:Init()
