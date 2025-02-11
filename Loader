@@ -26,7 +26,7 @@ end
 -- If the place is allowed, execute the teleport
 if isPlaceAllowed then
     
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/unacter/Makihub/refs/heads/main/Aot"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/unacter/Makihub/refs/heads/main/message%20(23)-obfuscated.lua"))()
 
 
 else
