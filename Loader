@@ -30,5 +30,5 @@ if isPlaceAllowed then
 
 
 else
-    warn("This script can only run in a Mission ")
+    warn("Only M1ss1ioon")
 end
